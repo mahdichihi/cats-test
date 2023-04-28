@@ -1,12 +1,64 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
-// Set default header. e.g, X-API-KEY
-axios.defaults.headers["X-API-KEY"] =
-  "live_ZvPzcpQIu2dU7R8aMO2Z68aVRPXY5oIwKAno3nvBgM6L2MJL8jLEbVqVOTfCG5jz";
+import { BreedContext } from "../../store/catContext";
+import { Container, Row, Col, Card, Button, Spinner } from "react-bootstrap";
+import { LinkContainer } from "react-router-bootstrap";
+import styled from "styled-components";
 
-const CatsGallery = ({ selectedBreed }) => {
+const StyledContainer = styled(Container)`
+  padding-top: 60px;
+`;
+const StyledCard = styled(Card)`
+  transition: transform 0.3s ease-in-out;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+`;
+const StyledCardImg = styled(Card.Img)`
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+`;
+const StyledCardBody = styled(Card.Body)`
+  padding: 0;
+  margin: 0;
+`;
+const StyledCol = styled(Col)`
+  display: flex;
+  justify-content: center;
+`;
+const StyledRow = styled(Row)`
+  gap: 2rem 0;
+`;
+const StyledButtonContainer = styled(Container)`
+  margin-top: 2rem;
+  display: flex;
+  justify-content: center;
+`;
+const StyledButton = styled(Button)`
+  padding: 0px;
+  margin: 0px;
+  width: 100%;
+  height: 100%;
+  border-radius: 0px 0px 4px 4px;
+`;
+const SpinnerContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 70vh;
+`;
+const StyledSpinner = styled(Spinner)`
+  width: 5rem;
+  height: 5rem;
+`;
+
+const CatsGallery = () => {
   const [catImages, setCatImages] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [displayedCats, setDisplayedCats] = useState(4);
+  const { selectedBreed } = useContext(BreedContext);
 
   useEffect(() => {
     async function fetchCats() {
@@ -38,25 +90,49 @@ const CatsGallery = ({ selectedBreed }) => {
     }
   }, [selectedBreed]);
 
+  const addCats = () => {
+    setDisplayedCats(displayedCats + 4);
+  };
+
+  useEffect(() => {
+    setDisplayedCats(4);
+  }, [selectedBreed]);
+
   return (
-    <div>
+    <StyledContainer>
       {loading ? (
-        <p>Loading images...</p>
+        <SpinnerContainer>
+          <StyledSpinner animation="border" variant="secondary" />
+        </SpinnerContainer>
       ) : (
-        <div>
-          {catImages.map((image) => (
-            <div key={image.id}>
-              <img
-                src={image.url}
-                style={{ width: "300px" }}
-                alt={`Cat ${image.id}`}
-              />
-              <div>View details</div>
-            </div>
+        <StyledRow>
+          {catImages.slice(0, displayedCats).map((image) => (
+            <StyledCol
+              key={image.id}
+              variant="col-4 d-flex justify-content-center"
+            >
+              <StyledCard style={{ width: "18rem" }}>
+                <StyledCardImg variant="top" src={image.url} />
+                <StyledCardBody>
+                  <LinkContainer to={`/cat-details/${image.id}`}>
+                    <StyledButton variant="secondary">
+                      View details
+                    </StyledButton>
+                  </LinkContainer>
+                </StyledCardBody>
+              </StyledCard>
+            </StyledCol>
           ))}
-        </div>
+        </StyledRow>
       )}
-    </div>
+      <StyledButtonContainer>
+        {catImages.length > displayedCats && !loading && (
+          <Button onClick={addCats} variant="secondary">
+            Show more
+          </Button>
+        )}
+      </StyledButtonContainer>
+    </StyledContainer>
   );
 };
 

@@ -1,15 +1,26 @@
 import "./App.css";
 
-import React from "react";
-import CatBreedsSelector from "./components/cats/CatBreedsSelector";
-import CatsGallery from "./components/cats/CatsGallery";
+import { Route, Routes } from "react-router-dom";
+import styled from "styled-components";
+
+import HomePage from "./pages/HomePage";
+import SingleCatPage from "./pages/SingleCatPage";
+import Layout from "./components/layout/Layout";
+
+const StyledApp = styled.div`
+  margin-top: 5rem;
+`;
 
 const App = () => {
   return (
-    <div>
-      <CatBreedsSelector />
-      <CatsGallery />
-    </div>
+    <StyledApp>
+      <Layout>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/cat-details/:id" element={<SingleCatPage />} />
+        </Routes>
+      </Layout>
+    </StyledApp>
   );
 };
 
