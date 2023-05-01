@@ -20,16 +20,27 @@ const StyledSpinner = styled(Spinner)`
   width: 5rem;
   height: 5rem;
 `;
+interface Breed {
+  name: string;
+  origin: string;
+  temperament: string;
+  description: string;
+}
 
-const SingleCatPage = () => {
-  const [catData, setCatData] = useState(null);
-  const { id } = useParams();
+interface CatData {
+  id: string;
+  url: string;
+  breeds: Breed[];
+}
+const SingleCatPage: React.FC = () => {
+  const [catData, setCatData] = useState<CatData | null>(null);
+  const { id } = useParams<{ id: string }>();
 
   useEffect(() => {
     async function fetchCatData() {
       if (id) {
         try {
-          const response = await axios.get(
+          const response = await axios.get<CatData>(
             `https://api.thecatapi.com/v1/images/${id}`,
             {
               headers: {

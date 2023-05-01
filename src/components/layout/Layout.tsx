@@ -1,7 +1,7 @@
 import React from "react";
 import { Image, Navbar } from "react-bootstrap";
 import styled from "styled-components";
-import catImage from "../../assets/cat.png";
+// import { catImage } from "./assets/cat.png";
 
 const StyledNavbar = styled(Navbar)`
   position: fixed;
@@ -23,12 +23,14 @@ const StyledImage = styled(Image)`
     transform: scale(1.1);
   }
 `;
-
-const Layout = ({ children }) => {
+interface Props {
+  children: React.ReactNode;
+}
+const Layout: React.FC<Props> = ({ children }) => {
   return (
     <>
       <StyledNavbar>
-        <StyledImage src={catImage} />
+        <StyledImage src="/assets/cat.png" />
       </StyledNavbar>
       <main style={{ paddingTop: "70px", paddingBottom: "20px" }}>
         {children}

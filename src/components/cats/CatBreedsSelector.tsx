@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, ChangeEvent } from "react";
 import axios from "axios";
 import { Spinner, FormSelect, Container } from "react-bootstrap";
 import { BreedContext } from "../../store/catContext";
@@ -28,15 +28,23 @@ const StyledSpinner = styled(Spinner)`
   width: 5rem;
   height: 5rem;
 `;
-const CatBreedsSelector = () => {
-  const [breeds, setBreeds] = useState([]);
-  const [loading, setLoading] = useState(true);
+
+interface Breed {
+  id: string;
+  name: string;
+}
+
+const CatBreedsSelector: React.FC = () => {
+  const [breeds, setBreeds] = useState<Breed[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
   const { selectedBreed, setSelectedBreed } = useContext(BreedContext);
 
   useEffect(() => {
     async function fetchBreeds() {
       try {
-        const response = await axios.get("https://api.thecatapi.com/v1/breeds");
+        const response = await axios.get<Breed[]>(
+          "https://api.thecatapi.com/v1/breeds"
+        );
         setBreeds(response.data);
         setLoading(false);
       } catch (error) {
@@ -47,9 +55,8 @@ const CatBreedsSelector = () => {
     fetchBreeds();
   }, []);
 
-  function handleSelectChange(event) {
+  function handleSelectChange(event: ChangeEvent<HTMLSelectElement>) {
     const breedId = event.target.value;
-
     setSelectedBreed(breedId);
   }
 

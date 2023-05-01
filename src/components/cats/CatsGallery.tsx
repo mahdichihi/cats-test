@@ -54,10 +54,10 @@ const StyledSpinner = styled(Spinner)`
   height: 5rem;
 `;
 
-const CatsGallery = () => {
-  const [catImages, setCatImages] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [displayedCats, setDisplayedCats] = useState(4);
+const CatsGallery: React.FC = () => {
+  const [catImages, setCatImages] = useState<any[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [displayedCats, setDisplayedCats] = useState<number>(4);
   const { selectedBreed } = useContext(BreedContext);
 
   useEffect(() => {
